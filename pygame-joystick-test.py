@@ -1,6 +1,6 @@
-#!/bin/env python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# vi:ts=4 sw=4
+# vi:ts=4 sw=4 et
 
 import sys,pygame
 from pygame.locals import *
