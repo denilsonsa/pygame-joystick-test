@@ -2,9 +2,11 @@
 # -*- coding: utf-8 -*-
 # vi:ts=4 sw=4 et
 
+from __future__ import division
+from __future__ import print_function
+
 import sys,pygame
 from pygame.locals import *
-
 
 class joystick_handler(object):
     def __init__(self, id):
@@ -18,19 +20,19 @@ class joystick_handler(object):
         self.numhats    = self.joy.get_numhats()
 
         self.axis = []
-        for i in xrange(self.numaxes):
+        for i in range(self.numaxes):
             self.axis.append(self.joy.get_axis(i))
 
         self.ball = []
-        for i in xrange(self.numballs):
+        for i in range(self.numballs):
             self.ball.append(self.joy.get_ball(i))
 
         self.button = []
-        for i in xrange(self.numbuttons):
+        for i in range(self.numbuttons):
             self.button.append(self.joy.get_button(i))
 
         self.hat = []
-        for i in xrange(self.numhats):
+        for i in range(self.numhats):
             self.hat.append(self.joy.get_hat(i))
 
 
@@ -71,14 +73,14 @@ class input_test(object):
                 filename = pygame.font.match_font(f, bold, italic)
                 if filename:
                     self.font = pygame.font.Font(filename, self.default.fontsize)
-                    #print "Successfully loaded font: %s (%s)" % (f, filename)
+                    #print("Successfully loaded font: %s (%s)" % (f, filename))
                     break
-            except IOError,e:
-                #print "Could not load font: %s (%s)" % (f, filename)
+            except IOError as e:
+                #print("Could not load font: %s (%s)" % (f, filename))
                 pass
         else:
             self.font = pygame.font.Font(None, self.default.fontsize)
-            #print "Loaded the default fallback font: %s" % pygame.font.get_default_font()
+            #print("Loaded the default fallback font: %s" % pygame.font.get_default_font())
 
 
     def pre_render_circle_image(self):
@@ -87,7 +89,7 @@ class input_test(object):
         self.circle.fill(Color("magenta"))
         basecolor  = ( 63, 63, 63,255) #RGBA
         lightcolor = (255,255,255,255)
-        for i in xrange(size//2,-1,-1):
+        for i in range(size//2,-1,-1):
             color = (
                 lightcolor[0] + i*(basecolor[0]-lightcolor[0])//(size//2),
                 lightcolor[1] + i*(basecolor[1]-lightcolor[1])//(size//2),
@@ -112,10 +114,10 @@ class input_test(object):
         #self.clock = pygame.time.Clock()
         self.joycount = pygame.joystick.get_count()
         if self.joycount == 0:
-            print "This program only works with at least one joystick plugged in. No joysticks were detected."
+            print("This program only works with at least one joystick plugged in. No joysticks were detected.")
             self.quit(1)
         self.joy = []
-        for i in xrange(self.joycount):
+        for i in range(self.joycount):
             self.joy.append(joystick_handler(i))
 
         # Find out the best window size
@@ -136,7 +138,7 @@ class input_test(object):
         self.circle.convert()
 
         while True:
-            for i in xrange(self.joycount):
+            for i in range(self.joycount):
                 self.draw_joy(i)
             pygame.display.flip()
             #self.clock.tick(30)
@@ -242,9 +244,9 @@ class input_test(object):
         ]+[ "  %d=% d,% d"   % (i,)+v for i,v in enumerate(joy.hat ) ]+[
             "%d buttons:"    % joy.numbuttons
         ]
-        for l in xrange(joy.numbuttons//10 + 1):
+        for l in range(joy.numbuttons//10 + 1):
             s = []
-            for i in xrange(l*10, min((l+1)*10, joy.numbuttons)):
+            for i in range(l*10, min((l+1)*10, joy.numbuttons)):
                 if joy.button[i]:
                     s.append("%d" % (i%10))
                 else:
