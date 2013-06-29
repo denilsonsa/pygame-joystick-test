@@ -57,6 +57,9 @@ class input_test(object):
             ("Courier New"      , 1, 0),
             ("Courier"          , 1, 0)
         )
+        # TODO: Add a command-line parameter to change the size.
+        # TODO: Maybe make this program flexible, let the window height define
+        #       the actual font/circle size.
         fontsize     = 20
         circleheight = 10
         resolution   = (640, 480)
