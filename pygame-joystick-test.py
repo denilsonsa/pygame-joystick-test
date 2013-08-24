@@ -242,9 +242,9 @@ class input_test(object):
             "%d axes:"       % joy.numaxes
         ]+[ "    %d=% .3f"   % (i,v)  for i,v in enumerate(joy.axis) ]+[
             "%d trackballs:" % joy.numballs
-        ]+[ "%d=% .2f,% .2f" % (i,)+v for i,v in enumerate(joy.ball) ]+[
+        ]+[ "%d=% .2f,% .2f" % ((i,)+v) for i,v in enumerate(joy.ball) ]+[
             "%d hats:"       % joy.numhats
-        ]+[ "  %d=% d,% d"   % (i,)+v for i,v in enumerate(joy.hat ) ]+[
+        ]+[ "  %d=% d,% d"   % ((i,)+v) for i,v in enumerate(joy.hat ) ]+[
             "%d buttons:"    % joy.numbuttons
         ]
         for l in range(joy.numbuttons//10 + 1):
