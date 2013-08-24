@@ -201,7 +201,7 @@ class input_test(object):
 
     def draw_hat(self, value, pos):
         xvalue = value[0]+1
-        yvalue = value[1]+1
+        yvalue = -value[1]+1
         width  = min(pos[2],pos[3])
         height = min(pos[2],pos[3])
         left   = pos[0] + (pos[2]-width )//2
