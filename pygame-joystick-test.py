@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # vi:ts=4 sw=4 et
+#
+# This tool runs fine on both Python 2 and Python 3.
+#
+# https://github.com/denilsonsa/pygame-joystick-test
 
 from __future__ import division
 from __future__ import print_function
@@ -40,9 +44,8 @@ class input_test(object):
     class program:
         "Program metadata"
         name    = "Pygame Joystick Test"
-        version = "0.1"
-        date    = "2007-09-09"
-        author  = "Denilson Figueiredo de Sá"
+        version = "0.2"
+        author  = "Denilson Figueiredo de Sá Maia"
         nameversion = name + " " + version
 
 
