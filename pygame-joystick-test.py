@@ -111,7 +111,8 @@ class input_test(object):
         #self.fontheight = self.font.get_height()
         self.fontheight = self.font.get_linesize()
         self.background = Color("black")
-        self.foreground = Color("white")
+        self.dynamictext = Color("white")
+        self.statictext = Color("#FFFFA0")
         self.antialias = 1
         self.pre_render_circle_image()
         #self.clock = pygame.time.Clock()
@@ -179,9 +180,9 @@ class input_test(object):
                     self.joy[event.joy].button[event.button] = 1
 
 
-    def rendertextline(self, text, pos, linenumber=0):
+    def rendertextline(self, text, pos, color, linenumber=0):
         self.screen.blit(
-            self.font.render(text, self.antialias, self.foreground, self.background),
+            self.font.render(text, self.antialias, color, self.background),
             (pos[0], pos[1]+linenumber*self.fontheight)
             # I can access top-left coordinates of a Rect by indexes 0 and 1
         )
@@ -237,15 +238,21 @@ class input_test(object):
         # -1,-1
         # 00 Buttons:
         # 0123456789
+
+        # Note: the first character is the color of the text.
+        text_colors = {
+            "D": self.dynamictext,
+            "S": self.statictext,
+        }
         output_strings = [
-            joy.name,
-            "%d axes:"       % joy.numaxes
-        ]+[ "    %d=% .3f"   % (i,v)  for i,v in enumerate(joy.axis) ]+[
-            "%d trackballs:" % joy.numballs
-        ]+[ "%d=% .2f,% .2f" % ((i,)+v) for i,v in enumerate(joy.ball) ]+[
-            "%d hats:"       % joy.numhats
-        ]+[ "  %d=% d,% d"   % ((i,)+v) for i,v in enumerate(joy.hat ) ]+[
-            "%d buttons:"    % joy.numbuttons
+            "S%s"             %joy.name,
+            "S%d axes:"       % joy.numaxes
+        ]+[ "D    %d=% .3f"   % (i,v)  for i,v in enumerate(joy.axis) ]+[
+            "S%d trackballs:" % joy.numballs
+        ]+[ "D%d=% .2f,% .2f" % ((i,)+v) for i,v in enumerate(joy.ball) ]+[
+            "S%d hats:"       % joy.numhats
+        ]+[ "D  %d=% d,% d"   % ((i,)+v) for i,v in enumerate(joy.hat ) ]+[
+            "S%d buttons:"    % joy.numbuttons
         ]
         for l in range(joy.numbuttons//10 + 1):
             s = []
@@ -254,10 +261,11 @@ class input_test(object):
                     s.append("%d" % (i%10))
                 else:
                     s.append(" ")
-            output_strings.append("".join(s))
+            output_strings.append("D" + "".join(s))
 
         for i,line in enumerate(output_strings):
-            self.rendertextline(line, pos, i)
+            color = text_colors[line[0]]
+            self.rendertextline(line[1:], pos, color, linenumber=i)
 
         tmpwidth = self.font.size("    ")[0]
         for i,v in enumerate(joy.axis):
