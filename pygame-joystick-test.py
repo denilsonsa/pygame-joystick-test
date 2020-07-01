@@ -9,8 +9,10 @@
 from __future__ import division
 from __future__ import print_function
 
-import sys,pygame
+import sys
+import pygame
 from pygame.locals import *
+
 
 class joystick_handler(object):
     def __init__(self, id):
@@ -48,18 +50,21 @@ class input_test(object):
         author  = "Denilson Figueiredo de Sá Maia"
         nameversion = name + " " + version
 
-
     class default:
         "Program constants"
-        fontnames    = (
-            # Font name, Bold, Italic
-            ("LucidaTypewriter" , 0 ,0),
-            ("Lucida Typewriter", 0, 0),
-            ("Terminus"         , 0, 0),
-            ("Luxi Mono"        , 0, 0),
-            ("Courier New"      , 1, 0),
-            ("Courier"          , 1, 0)
-        )
+        fontnames = [
+            # Bold, Italic, Font name
+            (0, 0, "Bitstream Vera Sans Mono"),
+            (0, 0, "DejaVu Sans Mono"),
+            (0, 0, "Inconsolata"),
+            (0, 0, "LucidaTypewriter"),
+            (0, 0, "Lucida Typewriter"),
+            (0, 0, "Terminus"),
+            (0, 0, "Luxi Mono"),
+            (1, 0, "Monospace"),
+            (1, 0, "Courier New"),
+            (1, 0, "Courier"),
+        ]
         # TODO: Add a command-line parameter to change the size.
         # TODO: Maybe make this program flexible, let the window height define
         #       the actual font/circle size.
@@ -67,58 +72,61 @@ class input_test(object):
         circleheight = 10
         resolution   = (640, 480)
 
-
     def load_the_fucking_font(self):
         # The only reason for this function is that pygame can find a font
         # but gets an IOError when trying to load it... So I must manually
         # workaround that.
 
-        #self.font = pygame.font.SysFont(self.default.fontnames, self.default.fontsize)
-        for f,bold,italic in self.default.fontnames:
+        # self.font = pygame.font.SysFont(self.default.fontnames, self.default.fontsize)
+        for bold, italic, f in self.default.fontnames:
             try:
                 filename = pygame.font.match_font(f, bold, italic)
                 if filename:
                     self.font = pygame.font.Font(filename, self.default.fontsize)
-                    #print("Successfully loaded font: %s (%s)" % (f, filename))
+                    # print("Successfully loaded font: %s (%s)" % (f, filename))
                     break
             except IOError as e:
-                #print("Could not load font: %s (%s)" % (f, filename))
+                # print("Could not load font: %s (%s)" % (f, filename))
                 pass
         else:
             self.font = pygame.font.Font(None, self.default.fontsize)
-            #print("Loaded the default fallback font: %s" % pygame.font.get_default_font())
-
+            # print("Loaded the default fallback font: %s" % pygame.font.get_default_font())
 
     def pre_render_circle_image(self):
         size = self.default.circleheight
         self.circle = pygame.surface.Surface((size,size))
         self.circle.fill(Color("magenta"))
-        basecolor  = ( 63, 63, 63,255) #RGBA
-        lightcolor = (255,255,255,255)
-        for i in range(size//2,-1,-1):
+        basecolor  = ( 63,  63,  63, 255)  # RGBA
+        lightcolor = (255, 255, 255, 255)
+        for i in range(size // 2, -1, -1):
             color = (
-                lightcolor[0] + i*(basecolor[0]-lightcolor[0])//(size//2),
-                lightcolor[1] + i*(basecolor[1]-lightcolor[1])//(size//2),
-                lightcolor[2] + i*(basecolor[2]-lightcolor[2])//(size//2),
+                lightcolor[0] + i * (basecolor[0] - lightcolor[0]) // (size // 2),
+                lightcolor[1] + i * (basecolor[1] - lightcolor[1]) // (size // 2),
+                lightcolor[2] + i * (basecolor[2] - lightcolor[2]) // (size // 2),
                 255
             )
-            pygame.draw.circle(self.circle, color, (int(size//4 + i//2)+1,int(size//4 + i//2)+1), i, 0)
+            pygame.draw.circle(
+                self.circle,
+                color,
+                (int(size // 4 + i // 2) + 1, int(size // 4 + i // 2) + 1),
+                i,
+                0
+            )
         self.circle.set_colorkey(Color("magenta"), RLEACCEL)
-
 
     def init(self):
         pygame.init()
         pygame.event.set_blocked((MOUSEMOTION, MOUSEBUTTONUP, MOUSEBUTTONDOWN))
         # I'm assuming Font module has been loaded correctly
         self.load_the_fucking_font()
-        #self.fontheight = self.font.get_height()
+        # self.fontheight = self.font.get_height()
         self.fontheight = self.font.get_linesize()
         self.background = Color("black")
-        self.dynamictext = Color("white")
         self.statictext = Color("#FFFFA0")
+        self.dynamictext = Color("white")
         self.antialias = 1
         self.pre_render_circle_image()
-        #self.clock = pygame.time.Clock()
+        # self.clock = pygame.time.Clock()
         self.joycount = pygame.joystick.get_count()
         if self.joycount == 0:
             print("This program only works with at least one joystick plugged in. No joysticks were detected.")
@@ -128,16 +136,15 @@ class input_test(object):
             self.joy.append(joystick_handler(i))
 
         # Find out the best window size
-        rec_height = max( [
-            5 + joy.numaxes + joy.numballs + joy.numhats + (joy.numbuttons+9)//10
+        rec_height = max(
+            5 + joy.numaxes + joy.numballs + joy.numhats + (joy.numbuttons + 9) // 10
             for joy in self.joy
-        ] ) * self.fontheight
+        ) * self.fontheight
         rec_width = max(
-            [ self.font.size("W"*13)[0] ] +
-            [ self.font.size(joy.name)[0] for joy in self.joy ]
+            [self.font.size("W" * 13)[0]] +
+            [self.font.size(joy.name)[0] for joy in self.joy]
         ) * self.joycount
         self.resolution = (rec_width, rec_height)
-
 
     def run(self):
         self.screen = pygame.display.set_mode(self.resolution, RESIZABLE)
@@ -148,8 +155,8 @@ class input_test(object):
             for i in range(self.joycount):
                 self.draw_joy(i)
             pygame.display.flip()
-            #self.clock.tick(30)
-            for event in [pygame.event.wait(),]+pygame.event.get():
+            # self.clock.tick(30)
+            for event in [pygame.event.wait(), ] + pygame.event.get():
                 # QUIT             none
                 # ACTIVEEVENT      gain, state
                 # KEYDOWN          unicode, key, mod
@@ -182,55 +189,66 @@ class input_test(object):
                 elif event.type == JOYBUTTONDOWN:
                     self.joy[event.joy].button[event.button] = 1
 
-
     def rendertextline(self, text, pos, color, linenumber=0):
         self.screen.blit(
             self.font.render(text, self.antialias, color, self.background),
-            (pos[0], pos[1]+linenumber*self.fontheight)
+            (pos[0], pos[1] + linenumber * self.fontheight)
             # I can access top-left coordinates of a Rect by indexes 0 and 1
         )
-
 
     def draw_slider(self, value, pos):
         width  = pos[2]
         height = self.default.circleheight
         left   = pos[0]
-        top    = pos[1] + (pos[3]-height)//2
-        self.screen.fill((127,127,127,255), (left+height//2, top+height//2-2, width-height,2))
-        self.screen.fill((191,191,191,255), (left+height//2, top+height//2  , width-height,2))
-        self.screen.fill((127,127,127,255), (left+height//2, top+height//2-2, 1,2))
-        self.screen.fill((191,191,191,255), (left+height//2+width-height-1, top+height//2-2, 1,2))
-        self.screen.blit(self.circle,(left + (width-height)*(value+1)//2, top))
-
+        top    = pos[1] + (pos[3] - height) // 2
+        self.screen.fill(
+            (127, 127, 127, 255),
+            (left + height // 2, top + height // 2 - 2, width - height, 2)
+        )
+        self.screen.fill(
+            (191, 191, 191, 255),
+            (left + height // 2, top + height // 2, width - height, 2)
+        )
+        self.screen.fill(
+            (127, 127, 127, 255),
+            (left + height // 2, top + height // 2 - 2, 1, 2)
+        )
+        self.screen.fill(
+            (191, 191, 191, 255),
+            (left + height // 2 + width - height - 1, top + height // 2 - 2, 1, 2)
+        )
+        self.screen.blit(
+            self.circle,
+            (left + (width - height) * (value + 1) // 2, top)
+        )
 
     def draw_hat(self, value, pos):
-        xvalue = value[0]+1
-        yvalue = -value[1]+1
-        width  = min(pos[2],pos[3])
-        height = min(pos[2],pos[3])
-        left   = pos[0] + (pos[2]-width )//2
-        top    = pos[1] + (pos[3]-height)//2
-        self.screen.fill((127,127,127,255), (left, top          , width, 1))
-        self.screen.fill((127,127,127,255), (left, top+height//2, width, 1))
-        self.screen.fill((127,127,127,255), (left, top+height-1 , width, 1))
-        self.screen.fill((127,127,127,255), (left         , top, 1, height))
-        self.screen.fill((127,127,127,255), (left+width//2, top, 1, height))
-        self.screen.fill((127,127,127,255), (left+width-1 , top, 1, height))
-        offx  = xvalue*(width -self.circle.get_width() )//2
-        offy  = yvalue*(height-self.circle.get_height())//2
-        #self.screen.fill((255,255,255,255),(left + offx, top + offy) + self.circle.get_size())
-        self.screen.blit(self.circle,(left + offx, top + offy))
-
+        xvalue =  value[0] + 1
+        yvalue = -value[1] + 1
+        width  = min(pos[2], pos[3])
+        height = min(pos[2], pos[3])
+        left   = pos[0] + (pos[2] - width ) // 2
+        top    = pos[1] + (pos[3] - height) // 2
+        self.screen.fill((127, 127, 127, 255), (left, top              , width, 1))
+        self.screen.fill((127, 127, 127, 255), (left, top + height // 2, width, 1))
+        self.screen.fill((127, 127, 127, 255), (left, top + height  - 1, width, 1))
+        self.screen.fill((127, 127, 127, 255), (left             , top, 1, height))
+        self.screen.fill((127, 127, 127, 255), (left + width // 2, top, 1, height))
+        self.screen.fill((127, 127, 127, 255), (left + width  - 1, top, 1, height))
+        offx = xvalue * (width  - self.circle.get_width() ) // 2
+        offy = yvalue * (height - self.circle.get_height()) // 2
+        # self.screen.fill((255,255,255,255),(left + offx, top + offy) + self.circle.get_size())
+        self.screen.blit(self.circle, (left + offx, top + offy))
 
     def draw_joy(self, joyid):
         joy = self.joy[joyid]
-        width = self.screen.get_width()//self.joycount
+        width = self.screen.get_width() // self.joycount
         height = self.screen.get_height()
-        pos = Rect(width*joyid, 0, width, height)
+        pos = Rect(width * joyid, 0, width, height)
         self.screen.fill(self.background, pos)
 
         # This is the number of lines required for printing info about this joystick.
-        #self.numlines = 5 + joy.numaxes + joy.numballs + joy.numhats + (joy.numbuttons+9)//10
+        # self.numlines = 5 + joy.numaxes + joy.numballs + joy.numhats + (joy.numbuttons+9)//10
 
         # Joy name
         # 0 Axes:
@@ -248,37 +266,52 @@ class input_test(object):
             "S": self.statictext,
         }
         output_strings = [
-            "S%s"             %joy.name,
+            "S%s"             % joy.name,
             "S%d axes:"       % joy.numaxes
-        ]+[ "D    %d=% .3f"   % (i,v)  for i,v in enumerate(joy.axis) ]+[
+        ]+[ "D    %d=% .3f"   % (i, v) for i, v in enumerate(joy.axis) ]+[
             "S%d trackballs:" % joy.numballs
-        ]+[ "D%d=% .2f,% .2f" % ((i,)+v) for i,v in enumerate(joy.ball) ]+[
+        ]+[ "D%d=% .2f,% .2f" % (i, v[0], v[1]) for i, v in enumerate(joy.ball) ]+[
             "S%d hats:"       % joy.numhats
-        ]+[ "D  %d=% d,% d"   % ((i,)+v) for i,v in enumerate(joy.hat ) ]+[
+        ]+[ "D  %d=% d,% d"   % (i, v[0], v[1]) for i, v in enumerate(joy.hat ) ]+[
             "S%d buttons:"    % joy.numbuttons
         ]
-        for l in range(joy.numbuttons//10 + 1):
+        for l in range(joy.numbuttons // 10 + 1):
             s = []
-            for i in range(l*10, min((l+1)*10, joy.numbuttons)):
+            for i in range(l * 10, min((l + 1) * 10, joy.numbuttons)):
                 if joy.button[i]:
-                    s.append("%d" % (i%10))
+                    s.append("%d" % (i % 10))
                 else:
                     s.append(" ")
             output_strings.append("D" + "".join(s))
 
-        for i,line in enumerate(output_strings):
+        for i, line in enumerate(output_strings):
             color = text_colors[line[0]]
             self.rendertextline(line[1:], pos, color, linenumber=i)
 
         tmpwidth = self.font.size("    ")[0]
-        for i,v in enumerate(joy.axis):
-            self.draw_slider(v, (pos[0], pos[1] + (2+i)*self.fontheight, tmpwidth, self.fontheight))
+        for i, v in enumerate(joy.axis):
+            self.draw_slider(
+                v,
+                (
+                    pos[0],
+                    pos[1] + (2 + i) * self.fontheight,
+                    tmpwidth,
+                    self.fontheight
+                )
+            )
 
         tmpwidth = self.font.size("  ")[0]
-        for i,v in enumerate(joy.hat):
-            self.draw_hat(v, (pos[0], pos[1] + (4+joy.numaxes+joy.numballs+i)*self.fontheight, tmpwidth, self.fontheight))
-        #self.draw_hat((int(joy.axis[3]),int(joy.axis[4])), (pos[0], pos[1] + (4+joy.numaxes+joy.numballs+0)*self.fontheight, tmpwidth, self.fontheight))
-
+        for i, v in enumerate(joy.hat):
+            self.draw_hat(
+                v,
+                (
+                    pos[0],
+                    pos[1] + (4 + joy.numaxes + joy.numballs + i) * self.fontheight,
+                    tmpwidth,
+                    self.fontheight
+                )
+            )
+        # self.draw_hat((int(joy.axis[3]),int(joy.axis[4])), (pos[0], pos[1] + (4+joy.numaxes+joy.numballs+0)*self.fontheight, tmpwidth, self.fontheight))
 
     def quit(self, status=0):
         pygame.quit()
