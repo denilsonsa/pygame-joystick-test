@@ -6,7 +6,7 @@ Requirements:
 * [pygame][] 1.x (untested in pygame 2)
     * I expect `pygame-joystick-test` to be compatible with any system that is supported by `pygame`.
 
-![pygame-joystick-test demonstration, with two gamepads connected][gif]
+[![pygame-joystick-test demonstration, with two gamepads connected][gif]][gif]
 
 [pygame-joystick-test]: https://github.com/denilsonsa/pygame-joystick-test
 [pygame]: https://www.pygame.org/
