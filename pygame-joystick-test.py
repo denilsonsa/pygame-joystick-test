@@ -163,7 +163,7 @@ class input_test(object):
                 # USEREVENT        code
                 if event.type == QUIT:
                     self.quit()
-                elif event.type == KEYDOWN and event.key == K_ESCAPE:
+                elif event.type == KEYDOWN and event.key in [K_ESCAPE, K_q]:
                     self.quit()
                 elif event.type == VIDEORESIZE:
                     self.screen = pygame.display.set_mode(event.size, RESIZABLE)
