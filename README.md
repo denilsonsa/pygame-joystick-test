@@ -10,4 +10,4 @@ Requirements:
 
 [pygame-joystick-test]: https://github.com/denilsonsa/pygame-joystick-test
 [pygame]: https://www.pygame.org/
-[gif]: http://denilsonsa.github.io/pygame-joystick-test/pygame-joystick-test.gif
+[gif]: http://denilsonsa.github.io/pygame-joystick-test/pygame-joystick-test.apng
