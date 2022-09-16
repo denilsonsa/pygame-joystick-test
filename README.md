@@ -3,7 +3,7 @@
 Requirements:
 
 * Python 2 or 3
-* [pygame][] 1.x (untested in pygame 2)
+* [pygame][] 1.x or 2.x
     * I expect `pygame-joystick-test` to be compatible with any system that is supported by `pygame`.
 * At least one joystick (or gamepad or any kind of game controller) connected to the system.
     * This tool refuses to start unless it detects at least one joystick.
