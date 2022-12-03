@@ -9,6 +9,21 @@
 from __future__ import division
 from __future__ import print_function
 
+import os
+
+# I see no reason to disable screensaver for this tool.
+os.environ["SDL_VIDEO_ALLOW_SCREENSAVER"] = "1"
+
+# Maybe people want to keep watching the joystick feedback even when this
+# window doesn't have focus. Possibly by capturing this window into OBS.
+os.environ["SDL_JOYSTICK_ALLOW_BACKGROUND_EVENTS"] = "1"
+
+# A tiny performance/latency hit isn't a problem here. Instead, it's more
+# important to keep the desktop compositing effects running fine. Disabling
+# compositing is known to cause issues on KDE/KWin/Plasma/X11 on Linux.
+os.environ["SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR"] = "0"
+
+
 import sys
 import pygame
 from pygame.locals import *
